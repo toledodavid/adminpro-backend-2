@@ -1,9 +1,15 @@
+require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
+
 const { dbConnection } = require('./database/config');
 
 
 // Create express server
 const app = express();
+
+// Set CORS
+app.use(cors());
 
 dbConnection();
 
@@ -16,8 +22,8 @@ app.get('/', (req, resp) => {
 });
 
 
-app.listen(3003, () => {
-  console.log('Server running successfully', 3003);
+app.listen(process.env.PORT, () => {
+  console.log('Server running successfully', process.env.PORT);
 });
 
 

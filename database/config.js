@@ -1,11 +1,12 @@
 const mongoose =  require('mongoose');
+require('dotenv').config();
 
 
 // axorPJK70TdtGRIA
 const dbConnection = async() => {
 
   try {
-    await mongoose.connect('mongodb+srv://mean_user:axorPJK70TdtGRIA@cluster0.bmwo7.mongodb.net/hospitaldb2', {
+    await mongoose.connect(process.env.DB_CONNECTION, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
