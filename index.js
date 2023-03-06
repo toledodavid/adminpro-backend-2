@@ -1,11 +1,13 @@
 const express = require('express');
+const { dbConnection } = require('./database/config');
 
 
 // Create express server
 const app = express();
 
-// Routes
+dbConnection();
 
+// Routes
 app.get('/', (req, resp) => {
   resp.json({
     ok: true,
