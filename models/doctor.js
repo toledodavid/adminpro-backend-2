@@ -4,7 +4,7 @@ const { Schema, model } = require('mongoose');
 const DoctorSchema = Schema({
   name: {
     type: String,
-    require: true
+    required: true
   },
   img: {
     type: String

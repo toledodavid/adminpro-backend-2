@@ -4,12 +4,13 @@ const { Schema, model } = require('mongoose');
 const HospitalSchema = Schema({
   name: {
     type: String,
-    require: true
+    required: true
   },
   img: {
     type: String
   },
   user: {
+    required: true,
     type: Schema.Types.ObjectId,
     ref: 'User'
   }
