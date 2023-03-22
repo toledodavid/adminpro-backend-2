@@ -1,11 +1,26 @@
 const {response: res} = require('express');
 const Doctor = require('../models/doctor');
 
-const getDoctors = (request, response = res) => {
-  response.json({
-    ok: true,
-    message: 'getDoctors'
-  });
+const getDoctors = async (request, response = res) => {
+
+  try {
+
+    const doctors = await Doctor.find()
+                                .populate('user', 'name img')
+                                .populate('hospital', 'name img');
+
+    response.json({
+      ok: true,
+      doctors
+    });
+
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({
+      ok: false,
+      message: 'Unexpected error, watch logs'
+    });
+  }
 }
 
 const createDoctor = async (request, response = res) => {
