@@ -1,4 +1,7 @@
 const {request: req, response: res} = require('express');
+const { v4: uuidv4 } = require('uuid');
+
+
 
 const uploadFile = (request = req, response = res) => {
 
@@ -22,13 +25,43 @@ const uploadFile = (request = req, response = res) => {
   }
 
   // Process the image
+  const file = request.files.image;
 
-  response.json({
-    ok: true,
-    message: 'upload file',
-    collection,
-    id
+  const cuttedName = file.name.split('.');
+  const fileExtention = cuttedName[cuttedName.length - 1];
+
+  const validExtentions = ['png', 'jpg', 'jpeg', 'gif'];
+
+  if (!validExtentions.includes(fileExtention)) {
+    return response.status(400).json({
+      ok: false,
+      message: 'Invalid file extention.'
+    });
+  }
+
+  // Generate file name
+  const fileName = `${uuidv4()}.${fileExtention}`;
+
+  // Path to save file
+  const path = `./uploads/${collection}/${fileName}`;
+
+  // Use the mv() method to place the file somewhere on your server
+  file.mv(path, (err) => {
+    if (err) {
+      console.log(err);
+      return response.status(500).json({
+        ok: false,
+        message: 'Error trying to move image'
+      });
+    }
+
+    response.json({
+      ok: true,
+      message: 'File uploaded',
+      fileName
+    });
   });
+
 }
 
 
