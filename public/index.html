@@ -12,8 +12,19 @@
 
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
+
+    var url = 'http://localhost:3003/api/login/google';
+
     function handleCredentialResponse(response) {
-      console.log("Encoded JWT ID token: " + response.credential);
+      // console.log("Encoded JWT ID token: " + response.credential);
+      fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({token: response.credential})
+      })
+      .then(resp => resp.json())
+      .then(data => console.log('Our Server: ', data))
+      .catch(console.log);
     }
     window.onload = function () {
       google.accounts.id.initialize({
