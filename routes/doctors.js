@@ -20,7 +20,12 @@ router.post('/',[
   validateFields
 ], createDoctor);
 
-router.put('/:id',[], updateDoctor);
+router.put('/:id',[
+  validateJWT,
+  check('name', 'Doctor name is required').notEmpty(),
+  check('hospital', 'Hospital id must be valid').isMongoId(),
+  validateFields
+], updateDoctor);
 
 router.delete('/:id', deleteDoctor);
 

@@ -1,4 +1,4 @@
-const {response: res} = require('express');
+const {request: req, response: res} = require('express');
 const Doctor = require('../models/doctor');
 
 const getDoctors = async (request, response = res) => {
@@ -50,11 +50,43 @@ const createDoctor = async (request, response = res) => {
   }
 }
 
-const updateDoctor = (request, response = res) => {
-  response.json({
-    ok: true,
-    message: 'updateDoctor'
-  });
+const updateDoctor = async (request = req, response = res) => {
+
+  const userId = request.uid;
+  const doctorId = request.params.id;
+
+  try {
+
+    const doctorDB = await Doctor.findById(doctorId);
+
+    if (!doctorDB) {
+      return response.status(404).json({
+        ok: false,
+        message: 'Doctor not found by id'
+      });
+    }
+
+    const newDoctorInfo = {
+      ...request.body,
+      user: userId
+    }
+
+    const doctorUpdated = await Doctor.findByIdAndUpdate(doctorId, newDoctorInfo, {new: true});
+
+    response.json({
+      ok: true,
+      doctor: doctorUpdated
+    });
+
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({
+      ok: false,
+      message: 'Unexpected error, watch logs'
+    });
+
+  }
+
 }
 
 const deleteDoctor = (request, response = res) => {
