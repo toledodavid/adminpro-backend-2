@@ -27,7 +27,7 @@ router.put('/:id',[
   validateFields
 ], updateDoctor);
 
-router.delete('/:id', deleteDoctor);
+router.delete('/:id', validateJWT, deleteDoctor);
 
 
 

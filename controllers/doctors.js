@@ -89,11 +89,35 @@ const updateDoctor = async (request = req, response = res) => {
 
 }
 
-const deleteDoctor = (request, response = res) => {
-  response.json({
-    ok: true,
-    message: 'deleteDoctor'
-  });
+const deleteDoctor = async (request = req, response = res) => {
+
+  const doctorId = request.params.id;
+
+  try {
+
+    const doctorDB = await Doctor.findById(doctorId);
+
+    if (!doctorDB) {
+      return response.status(404).json({
+        ok: false,
+        message: 'Doctor not found by id'
+      });
+    }
+
+    await Doctor.findByIdAndDelete(doctorId);
+
+    response.json({
+      ok: true,
+      message: 'Doctor deleted'
+    });
+
+  } catch (error) {
+    response.status(500).json({
+      ok: false,
+      message: 'Unexpected error, watch logs'
+    });
+  }
+
 }
 
 
