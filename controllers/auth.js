@@ -95,9 +95,12 @@ const renewToken = async (request = req, response = res) => {
   // Generate token - JWT
   const token = await generateJWT(uid);
 
+  const user = await User.findById(uid);
+
   response.json({
     ok: true,
-    token
+    token,
+    user
   });
 
 }
