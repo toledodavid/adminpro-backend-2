@@ -120,6 +120,30 @@ const deleteDoctor = async (request = req, response = res) => {
 
 }
 
+const getDoctorById = async (request = req, response = res) => {
+  const doctorId = request.params.id;
+
+  try {
+
+    const doctor = await Doctor.findById(doctorId)
+                                .populate('user', 'name img')
+                                .populate('hospital', 'name img');
+
+    response.json({
+      ok: true,
+      doctor
+    });
+
+  } catch (error) {
+    console.log(error);
+    response.json({
+      ok: false,
+      message: 'Unexpected error, watch logs'
+    });
+  }
+
+}
+
 
 
 module.exports = {
@@ -127,4 +151,5 @@ module.exports = {
   createDoctor,
   updateDoctor,
   deleteDoctor,
+  getDoctorById,
 }
