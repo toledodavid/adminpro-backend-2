@@ -66,8 +66,44 @@ const validateADMIN_ROLE = async (request, response = res, next) => {
 }
 
 
+const validateADMIN_ROLE_or_CurrentUser = async (request, response = res, next) => {
+
+  const uid = request.uid;
+  const id = request.params.id;
+
+  try {
+
+    const userDB = await User.findById(uid);
+
+    if (!userDB) {
+      return response.status(404).json({
+        ok: false,
+        message: 'User does not exist'
+      });
+    }
+
+    if (userDB.role === 'ADMIN_ROLE' || uid === id) {
+      next();
+    } else {
+      return response.status(403).json({
+        ok: false,
+        message: 'Unauthorized task'
+      });
+    }
+
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({
+      ok: false,
+      message: 'Unexpected error'
+    });
+  }
+}
+
+
 
 module.exports = {
   validateJWT,
-  validateADMIN_ROLE
+  validateADMIN_ROLE,
+  validateADMIN_ROLE_or_CurrentUser
 };
